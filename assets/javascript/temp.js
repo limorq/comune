@@ -8,17 +8,13 @@ var config = {
    messagingSenderId: "843261480374"
  };
  firebase.initializeApp(config);
-
 var messagesRef = firebase.database().ref();
-
 var userName = "";
 var email = "";
-
 /** Helper function to return Random Number between min and max **/
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
 function populateUserName() {
   firebase.auth().onAuthStateChanged(function(user) {
     userName = sessionStorage.getItem("userName");
@@ -39,12 +35,10 @@ function publishMessage() {
     messagesRef.push({userName:userName, message:message, email: email, timeStamp: timeStamp});
     $("#txtMainChat").val("");
 }
-
 $("#btnMainChat").on("click", function (event) {
     event.preventDefault();
     publishMessage();
 })
-
 messagesRef.limitToLast(10).on("child_added", function (newMessage) {
   var message = newMessage.val();
   addMessageToMessagesPane(message);
@@ -53,10 +47,8 @@ messagesRef.limitToLast(10).on("child_added", function (newMessage) {
 function addMessageToMessagesPane(message) {
   var media = $("<div>");
   media.addClass("media");
-
   var divMedia = $("<div>");
   divMedia.addClass("media-left media-top");
-
   var img = $("<img>");
   img.attr("id", "avatar");
   img.attr("src", "assets/images/avatarImage.png");
@@ -66,7 +58,6 @@ function addMessageToMessagesPane(message) {
   img.attr("title", message.email);
   img.attr("alt", message.email);
   divMedia.append(img);
-
   var mediaBody = $("<div>");
   var h4 = $("<h4>");
   h4.addClass("media-heading");
@@ -80,19 +71,14 @@ function addMessageToMessagesPane(message) {
   messageSpan.text(message.message);
   mediaBody.append(h4);
   mediaBody.append(messageSpan);
-
   media.append(divMedia);
   media.append(mediaBody);
-
   $("#messBox").append(media);
   $("#messBox")[0].scrollTop = $("#messBox")[0].scrollHeight;
 }
-
-
 function handleIncomingMessageSuccess() {
   alert("handleIncomingMessageSuccess");
 }
-
 function handleIncomingMessageError() {
   alert("handleIncomingMessageError");
 }
