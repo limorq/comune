@@ -14,15 +14,12 @@ var messagesRef = firebase.database().ref();
 var userName = "";
 var email = "";
 var uid   = "";
-
 var activeChatRoom = "general_channel";
 var inActiveChatRooms = {general: [], dogs: [], cats:[]};
-
 /** Helper function to return Random Number between min and max **/
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
 function populateUserName() {
   firebase.auth().onAuthStateChanged(function(user) {
     userName = sessionStorage.getItem("userName");
@@ -38,7 +35,6 @@ function populateUserName() {
     }
   });
 }
-
 function publishMessage() {
     var message = $("#txtMainChat").val().trim();
     if (message.length==0) return;
@@ -53,13 +49,11 @@ function publishLocationMessage(pos) {
   var timeStamp = moment().valueOf();
   messagesRef.push({userName:userName, message: "LAT: " + pos.lat + " LAN " + pos.lng, email: email, uid: uid, timeStamp: timeStamp, chatRoom: "maps_channel", lat: pos.lat, lng: pos.lng});
 }
-
 function addNewChannel() {
   var channelName = prompt("Please enter new channel name");
   var timeStamp = moment().valueOf();
   messagesRef.push({userName:userName, message:channelName, email: email, uid: uid, timeStamp: timeStamp, chatRoom: "newChannel"});
 }
-
 messagesRef.limitToLast(100).on("child_added", function (newMessage) {
   var message = newMessage.val();
   addMessageToInAciveMessages(message);
@@ -67,7 +61,6 @@ messagesRef.limitToLast(100).on("child_added", function (newMessage) {
     addMessageToMessagesPane(message);
   }
 });
-
 var mapRef = null;
 function switchActiveChat() {
     activeChatRoom = $(this).attr("id");
@@ -92,7 +85,6 @@ function switchActiveChat() {
         }
   }
 }
-
 function addMessageToInAciveMessages(message) {
     //console.log(message);
     var inActiveChatRoomMessages = [];
@@ -106,7 +98,6 @@ function addMessageToInAciveMessages(message) {
     } else {
       inActiveChatRoomMessages.push(message);
     }
-
     inActiveChatRooms[chatRoom] = inActiveChatRoomMessages;
     updateInActiveChatRoomDisplay(chatRoom, inActiveChatRoomMessages.length);
 }
@@ -136,11 +127,9 @@ function getChatRoom(message) {
   }
   return chatRoom;
 }
-
 function updateInActiveChatRoomDisplay(inActiveChatRoom, messageCount) {
     $("#"+inActiveChatRoom+"_badge").text(messageCount);
 }
-
 function addMessageToMessagesPane(message) {
   var media = $("<div>");
   media.addClass("media");
@@ -157,7 +146,6 @@ function addMessageToMessagesPane(message) {
   img.attr("title", message.email);
   img.attr("alt", message.email);
   divMedia.append(img);
-
   var mediaBody = $("<div>");
   mediaBody.addClass("media-body");
   var h4 = $("<h4>");
@@ -174,11 +162,9 @@ function addMessageToMessagesPane(message) {
   mediaBody.append(messageSpan);
   media.append(divMedia);
   media.append(mediaBody);
-
   $("#messBox").append(media);
   $("#messBox")[0].scrollTop = $("#messBox")[0].scrollHeight;
 }
-
 function createChannel(channelName) {
   var div = $("<div>");
   div.attr("id", channelName+"_channel");
@@ -199,7 +185,6 @@ function createChannel(channelName) {
 function handleIncomingMessageSuccess() {
   alert("handleIncomingMessageSuccess");
 }
-
 function handleIncomingMessageError() {
   alert("handleIncomingMessageError");
 }
